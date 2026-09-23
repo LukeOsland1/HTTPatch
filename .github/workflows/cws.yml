@@ -1,0 +1,50 @@
+name: Chrome Web Store publish
+
+# Configure personal release-environment credentials before running manually.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Gate signing + publishing behind a protected environment: this job (and thus
+    # access to CRX_PRIVATE_KEY and the CWS OAuth creds) can't run until a required
+    # reviewer approves, closing the "push a v* tag at a modified workflow to
+    # exfiltrate the key" path that SHA-pinning alone doesn't. Configure `release`
+    # with required reviewers in Settings → Environments, and store the secrets
+    # there (not as repo secrets).
+    environment: release
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # Validate the exact package before upload.
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npm run check:manifest
+      - name: Pack signed CRX
+        env:
+          CRX_PRIVATE_KEY: ${{ secrets.CRX_PRIVATE_KEY }}
+        run: npm run pack:crx
+      - name: Upload + publish to the Chrome Web Store
+        env:
+          CWS_CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
+          CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+          CWS_REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+          CWS_PUBLISHER_ID: ${{ vars.CWS_PUBLISHER_ID }}
+          CWS_ITEM_ID: ${{ vars.CWS_ITEM_ID }}
+          CWS_VERIFIED_UPLOAD_KEY_ID: ${{ vars.CWS_VERIFIED_UPLOAD_KEY_ID }}
+        run: npm run publish:cws
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: httpatch-crx
+          path: release/*.crx

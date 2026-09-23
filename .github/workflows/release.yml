@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      # Pinned to immutable commit SHAs (see ci.yml); Dependabot keeps them current.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Check release version and notes
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          if [ "$GITHUB_REF_NAME" != "v$VERSION" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package version $VERSION"
+            exit 1
+          fi
+          node scripts/changelog-section.mjs "$VERSION" > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "::error::CHANGELOG.md has no notes for $VERSION"
+            exit 1
+          fi
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npm run check:manifest
+      # One ZIP works in Chromium-based browsers.
+      - run: npm run zip
+      # Firefox: build the isolated target and package a .xpi. Signs via the AMO
+      # API when AMO_JWT_* secrets are set (real self-install); otherwise emits an
+      # unsigned .xpi (dev/temporary only) so the release still lists the artifact.
+      - run: npm run build:firefox
+      - run: node scripts/check-built-manifest.mjs dist-firefox
+      - run: npm run lint:firefox
+      - run: npm run pack:firefox
+        env:
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+      - name: Create GitHub Release
+        # Pinned to a commit SHA, not the mutable v3 tag: this action's maintainer
+        # merges straight to main and moves major tags, so a floating @v3 could be
+        # repointed to unreviewed code with release-token (contents: write) access.
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          draft: true
+          files: |
+            release/httpatch-*.zip
+            release/httpatch-*-firefox.xpi
+          # The CHANGELOG entry leads; GitHub appends its "What's Changed" PR list
+          # underneath, so the page has both the narrative and the commit trail.
+          body_path: release-notes.md
+          generate_release_notes: true

@@ -1,0 +1,126 @@
+// Firefox variant of src/core/sync-area.ts. Identical logic against the
+// promise-based `browser.storage.*` (via webextension-polyfill), wired in for
+// the Firefox build by a resolve.alias in firefox/vite.config.ts. The Chrome
+// build is untouched.
+//
+// Firefox's storage.sync needs a signed add-on with a stable id (we have
+// httpatch@lukeosland1) and a signed-in Firefox Account; without either, the API
+// is present but writes fail. That degrades to "sync off", which is exactly how
+// the replication layer is designed to fail.
+
+import browser from 'webextension-polyfill';
+import { newId } from '@/core/id';
+import { isOwnedSyncKey, previousLocalEntry, transferLegacySyncItems } from '@/core/storage-compat';
+import {
+  SYNC_STATE_KEY,
+  coerceSyncState,
+  parseRemote,
+  type RemoteSnapshot,
+  type SyncState,
+} from '@/core/sync';
+
+export function isSyncAvailable(): boolean {
+  return browser.storage?.sync !== undefined;
+}
+
+export async function readRemote(): Promise<RemoteSnapshot> {
+  const raw = (await browser.storage.sync.get(null)) as Record<string, unknown>;
+  return parseRemote(await transferLegacySyncItems(raw, browser.storage.sync));
+}
+
+export interface WriteOutcome {
+  ok: boolean;
+  error?: string;
+  failedKeys?: string[];
+}
+
+function describeError(err: unknown): string {
+  const message = err instanceof Error ? err.message : String(err);
+  if (/QUOTA_BYTES_PER_ITEM/i.test(message)) {
+    return 'A profile is too large to sync (the per-item limit is 8 KB).';
+  }
+  if (/QUOTA_BYTES/i.test(message)) {
+    return 'Sync storage is full (the limit is 100 KB). Delete or shrink a profile to sync again.';
+  }
+  if (/MAX_WRITE_OPERATIONS|WRITE_OPERATIONS_PER/i.test(message)) {
+    return 'Too many sync writes for now — this will retry automatically shortly.';
+  }
+  if (/MAX_ITEMS/i.test(message)) {
+    return 'Too many profiles to sync (the limit is 512 items).';
+  }
+  return message;
+}
+
+export async function writeRemote(
+  items: Record<string, unknown>,
+  removeKeys: string[],
+): Promise<WriteOutcome> {
+  // Removals are attempted separately so a failure here cannot be masked by the
+  // item-by-item retry below, which only ever re-sends `items`. Reporting ok
+  // would let the caller commit bookkeeping that records the deletions as
+  // propagated when they are still sitting in the area.
+  try {
+    if (removeKeys.length > 0) await browser.storage.sync.remove(removeKeys);
+  } catch (err) {
+    return { ok: false, error: describeError(err) };
+  }
+  try {
+    if (Object.keys(items).length > 0) await browser.storage.sync.set(items);
+    return { ok: true };
+  } catch (err) {
+    const failedKeys: string[] = [];
+    for (const [key, value] of Object.entries(items)) {
+      try {
+        await browser.storage.sync.set({ [key]: value });
+      } catch {
+        failedKeys.push(key);
+      }
+    }
+    return failedKeys.length === 0
+      ? { ok: true }
+      : { ok: false, error: describeError(err), failedKeys };
+  }
+}
+
+export async function clearRemote(keys: string[]): Promise<void> {
+  await browser.storage.sync.remove(keys);
+}
+
+export async function listOwnedRemoteKeys(): Promise<string[]> {
+  const raw = (await browser.storage.sync.get(null)) as Record<string, unknown>;
+  return Object.keys(raw).filter(isOwnedSyncKey);
+}
+
+export async function getBytesInUse(): Promise<number | null> {
+  try {
+    // Not implemented on every Firefox version — treat absence as "unknown"
+    // rather than an error, so the UI simply omits the usage readout.
+    const area = browser.storage.sync as typeof browser.storage.sync & {
+      getBytesInUse?: (keys: string | string[] | null) => Promise<number>;
+    };
+    if (typeof area.getBytesInUse !== 'function') return null;
+    return await area.getBytesInUse(null);
+  } catch {
+    return null;
+  }
+}
+
+// --- device-local bookkeeping (lives in storage.local, never synced) --------
+
+export async function loadSyncState(): Promise<SyncState> {
+  const result = await browser.storage.local.get(null);
+  const previous = previousLocalEntry(result, SYNC_STATE_KEY, 'sync-state');
+  if (result[SYNC_STATE_KEY] !== undefined) {
+    if (previous) await browser.storage.local.remove(previous[0]).catch(() => {});
+    return coerceSyncState(result[SYNC_STATE_KEY], newId);
+  }
+  if (!previous) return coerceSyncState(undefined, newId);
+  const state = coerceSyncState(previous[1], newId);
+  await browser.storage.local.set({ [SYNC_STATE_KEY]: state });
+  await browser.storage.local.remove(previous[0]).catch(() => {});
+  return state;
+}
+
+export async function saveSyncState(state: SyncState): Promise<void> {
+  await browser.storage.local.set({ [SYNC_STATE_KEY]: state });
+}

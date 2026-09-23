@@ -1,0 +1,15 @@
+node_modules/
+dist/
+dist-firefox/
+release/
+web-ext-artifacts/
+*.log
+.DS_Store
+.vite/
+_site/
+
+.local-backups/
+*.pem
+.env
+.env.*
+!.env.example

@@ -1,0 +1,9 @@
+dist
+release
+node_modules
+package-lock.json
+
+dist-firefox
+_site
+.local-backups
+web-ext-artifacts

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" width="1400" height="560"
+  viewBox="0 0 1400 560">
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#101827"/><stop offset="1" stop-color="#25205a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#817bff"/><stop offset="1" stop-color="#56d6e7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1400" height="560" fill="url(#background)"/>
+  
+  <circle cx="1340" cy="15" r="310" fill="#4f46e5" opacity=".12"/>
+  <circle cx="1100" cy="590" r="310" fill="#56d6e7" opacity=".06"/>
+  <path d="M0 552H1400" stroke="#817bff" stroke-width="16"/>
+  
+  <g transform="translate(78 77) scale(0.8125)">
+    <rect width="128" height="128" rx="23" fill="#4f46e5"/>
+    <path d="M32 32h17v25h30V32h17v64H79V73H49v23H32z" fill="#fff"/>
+  </g>
+  <text x="208" y="155" fill="#fff" font-family="Arial,sans-serif" font-size="72"
+    font-weight="700">HTTPatch</text>
+  <text x="80" y="280" fill="#f4f4ff" font-family="Arial,sans-serif" font-size="42"
+    font-weight="600">Shape your HTTP headers.</text>
+  <text x="82" y="344" fill="#bfc6df" font-family="Arial,sans-serif" font-size="27">
+    Create profiles. Scope rules. Switch instantly.</text>
+  <rect x="792" y="101" width="523" height="342" rx="22" fill="#202532"
+    stroke="#57517d" stroke-width="2"/>
+  <circle cx="827" cy="136" r="7" fill="#817bff"/>
+  <text x="848" y="145" fill="#f4f4ff" font-family="Arial,sans-serif" font-size="23"
+    font-weight="700">Example site</text>
+  <rect x="1184" y="121" width="80" height="32" rx="16" fill="#4f46e5"/>
+  <circle cx="1248" cy="137" r="12" fill="#fff"/>
+  <path d="M816 174H1290" stroke="#3a4152" stroke-width="2"/>
+  <rect x="821" y="205" width="107" height="43" rx="8" fill="#333c50"/>
+  <text x="839" y="234" fill="#f4f4ff" font-family="Arial,sans-serif" font-size="18">Request</text>
+  <rect x="939" y="205" width="81" height="43" rx="8" fill="#333c50"/>
+  <text x="957" y="234" fill="#f4f4ff" font-family="Arial,sans-serif" font-size="18">Set</text>
+  <rect x="821" y="266" width="469" height="57" rx="8" fill="#171c26"
+    stroke="#4b5264"/>
+  <text x="841" y="302" fill="#e5e9f7" font-family="Arial,sans-serif" font-size="21">
+    X-HTTPatch-Test: working</text>
+  <text x="822" y="384" fill="#aeb8d2" font-family="Arial,sans-serif" font-size="19">
+    1 active rule · Manage profiles &amp; filters</text>
+</svg>
