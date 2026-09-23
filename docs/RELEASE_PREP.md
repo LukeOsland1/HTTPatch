@@ -57,21 +57,42 @@ The extension package also contains an offline `privacy.html` page.
   tab's URL for site and tab shortcuts. Tab IDs stay in session storage only.
 - `alarms`: batch sync writes and check for changes from other devices.
 
+## Chrome Web Store privacy fields
+
+**Single purpose:** Let users create browser profiles that set, append or remove
+HTTP request and response headers for websites they choose.
+
+**Data handling:** Profiles can contain header values such as authentication tokens
+or cookies, notes, and URL/site filters. HTTPatch stores these locally and syncs
+profiles through the browser account by default. It does not send them to the
+developer or an analytics service. Opening the popup reads the current tab URL
+for the site shortcut; choosing that shortcut saves the domain as a filter.
+Describe these behaviours in the Privacy practices tab, including any applicable
+authentication, website and user-provided data categories. Do not claim that the
+extension handles no user data merely because it has no developer server.
+
+Use the published HTTPS privacy-page URL in the dashboard's privacy-policy field.
+The [Chrome Web Store privacy guidance](https://developer.chrome.com/docs/webstore/cws-dashboard-privacy)
+explains the single-purpose, permission and data-use fields.
+
 ## Steps before the first release
 
-1. Choose the HTTPatch release version. Update `package.json` and `package-lock.json`,
-   and add a matching dated section to `CHANGELOG.md`.
-2. Check [GitHub CI](https://github.com/LukeOsland1/HTTPatch/actions) and run the
+1. Use the prepared `1.0.0` version and notes in `CHANGELOG.md`. Check
+   [GitHub CI](https://github.com/LukeOsland1/HTTPatch/actions) and run the
    packaged browser test locally. Review the screenshots and listing copy.
-3. Create Chrome Web Store and, if wanted, Mozilla add-on listings. Keep their
-   IDs and signing credentials private.
-4. Publish a public HTTPS privacy-policy URL. The manual Pages workflow publishes
-   only `PRIVACY.md`; GitHub Pages must first be enabled for this repository.
-5. Push `v<version>` intentionally. The release workflow now rejects a tag that
+2. Publish the public HTTPS privacy page and run `npm run check:privacy` with
+   `PRIVACY_POLICY_URL` set to its address.
+3. Push `v1.0.0` intentionally. The release workflow rejects a tag that
    differs from `package.json` or has no changelog section, and creates a draft.
-6. Review the draft packages and notes. Publish the GitHub release and submit store
-   listings separately when ready. The Chrome Web Store workflow is manual and
-   assumes a personal listing configured for verified CRX uploads.
+4. Review the draft Chromium ZIP and notes, then publish the GitHub release when
+   the repository is ready to be public. A Firefox XPI is attached only when
+   Mozilla signing credentials are configured.
+5. Create the Chrome Web Store listing manually. Upload the Chromium ZIP, add the
+   prepared images and descriptions, complete the Privacy practices tab and
+   submit it for review. Keep the listing ID and credentials private.
+6. After the initial listing exists, configure and test the manual Chrome Web
+   Store workflow for updates. Automated deployment can be enabled after its
+   publisher and extension IDs have been verified.
 
 Do not add publisher tokens or signing keys to the repository. A signed Firefox
 XPI and authenticated Chrome Web Store upload require personal credentials; an

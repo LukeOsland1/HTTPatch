@@ -184,6 +184,8 @@ try {
   // Return to the stable example profile for the popup and network check.
   await options.locator('.toolbar').getByRole('button', { name: 'Delete' }).click();
   await expect(options.locator('.plist li')).toHaveCount(1);
+  await themeSelect.selectOption('light');
+  await expect(options.locator('html')).toHaveAttribute('data-theme', 'light');
 
   const popup = await context.newPage();
   await popup.goto(`chrome-extension://${id}/src/popup/index.html`);

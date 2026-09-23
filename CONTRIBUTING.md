@@ -66,7 +66,7 @@ Chrome Web Store publishing is a separate **manual** workflow. Configure the per
 script is for listings configured for verified CRX uploads. For a first manual listing,
 use the Chromium ZIP. No personal listing has been configured here.
 
-The privacy-page workflow is manual too. Enable GitHub Pages on your personal repository
-and run it to publish `PRIVACY.md`. `npm run check:privacy` compares the Markdown source
-with a public Markdown copy supplied through `PRIVACY_POLICY_URL`; it does not contact
-another repository. The extension also includes its own offline privacy page.
+The privacy-page workflow is manual too. It publishes only the generated HTML
+from `PRIVACY.md`. `npm run check:privacy` rebuilds that page and compares it with
+the public HTTPS URL supplied through `PRIVACY_POLICY_URL`. The extension also
+includes its own offline privacy page.

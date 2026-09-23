@@ -3,13 +3,14 @@
 // merged PR titles.
 //
 // Usage:  node scripts/changelog-section.mjs <version> [changelog] > notes.md
-//   <version> may be given with or without a leading "v" (v0.3.0 == 0.3.0).
+//   <version> may be given with or without a leading "v" (v1.0.0 == 1.0.0).
 //
-// Prints nothing and exits 0 when the section is missing, so a forgotten
-// CHANGELOG rename degrades the release page instead of failing the release.
-// release.yml turns that into a visible ::warning.
+// Prints nothing and exits 0 when the section is missing; release.yml treats
+// empty output as an error and stops the draft release.
 
 import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 /** Strip a leading "v" so a tag name and a package version are interchangeable. */
 export function normalizeVersion(version) {
@@ -40,7 +41,7 @@ export function changelogSection(markdown, version) {
 }
 
 // Only run when invoked directly, so the helpers above stay importable in tests.
-if (process.argv[1] && import.meta.url.endsWith(process.argv[1].split('/').pop())) {
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const [, , version, file = 'CHANGELOG.md'] = process.argv;
   if (!version) {
     console.error('usage: node scripts/changelog-section.mjs <version> [changelog]');

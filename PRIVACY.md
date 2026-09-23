@@ -1,6 +1,6 @@
 # HTTPatch Privacy Policy
 
-_Last updated: 22 September 2026_
+_Last updated: 23 September 2026_
 
 HTTPatch is maintained by [Luke Osland](https://github.com/LukeOsland1). It modifies
 HTTP headers using rules you configure. It has no developer-operated server,
@@ -28,8 +28,8 @@ for the current browser session on this device. A tab-only profile without an
 assignment stays inactive, including after a restart or on another device.
 
 You can turn **Sync** off in the options page. Use **Remove synced copy** afterwards
-to delete previously uploaded data. Your local profiles remain. Uninstalling the
-extension clears its local storage but does not itself delete the synced copy.
+to delete previously uploaded data. Your local profiles remain. To ensure the
+synced copy is removed, do this before uninstalling the extension.
 
 ## Websites and permissions
 
@@ -37,13 +37,19 @@ HTTPatch uses `declarativeNetRequestWithHostAccess` to apply your header rules.
 Broad host access is requested because rules can target any website. Header changes
 are applied by the browser: HTTPatch does not read request or response bodies.
 When you open the popup, HTTPatch reads the current tab's URL to offer a site
-shortcut. It does not save that URL or send it to the developer.
+shortcut. Opening the popup alone does not save that URL. If you choose
+**Scope to this site**, the site's domain is saved as a profile filter and may
+be included in browser sync. HTTPatch does not send the URL to the developer.
 
 HTTPatch includes **no content scripts** and does not read page content, forms,
 browsing history or user activity.
 
 The `storage` permission saves settings and supports browser sync. The `alarms`
 permission schedules sync batches and periodic checks for profile changes.
+
+HTTPatch uses this data only to apply the rules you configure and to sync your
+profiles if enabled. The developer cannot read your profiles, header values or
+site filters, and does not use them for advertising.
 
 ## External links and donations
 

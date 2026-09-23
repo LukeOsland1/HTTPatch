@@ -1,6 +1,6 @@
 {
   "name": "httpatch",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "HTTPatch — a free, ad-free browser extension for modifying HTTP request and response headers.",
   "type": "module",
   "license": "MIT",
@@ -15,7 +15,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check:manifest": "node scripts/check-built-manifest.mjs dist",
-    "check:privacy": "node scripts/check-privacy-published.mjs",
+    "check:privacy": "npm run build:privacy && node scripts/check-privacy-published.mjs",
     "build:privacy": "node scripts/build-privacy-page.mjs _site",
     "zip": "node scripts/zip.mjs",
     "pack:crx": "node scripts/pack-crx.mjs",
