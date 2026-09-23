@@ -1,7 +1,7 @@
 # HTTPatch release preparation
 
-This is a draft for the first release. The repository and extension remain
-private and unpublished until the release and store listings are deliberately set up.
+This is a draft for the first release. The repository is public; the GitHub
+Release and browser-store listings remain unpublished until their final review.
 
 ## Browser store listing copy
 
@@ -44,7 +44,7 @@ The [site-scoped popup capture](screenshots/popup-site.png),
 **Optional donations:** [Ko-fi](https://ko-fi.com/lukeosland)
 
 **Privacy policy:** [PRIVACY.md](../PRIVACY.md) is the source. The
-[public HTTPS page](https://lukeosland1.github.io/HTTPatch-privacy/) is ready for
+[public HTTPS page](https://lukeosland1.github.io/HTTPatch/) is ready for
 the store listing; `npm run check:privacy` verifies that it matches the source.
 The extension package also contains an offline `privacy.html` page.
 
@@ -72,7 +72,7 @@ Describe these behaviours in the Privacy practices tab, including any applicable
 authentication, website and user-provided data categories. Do not claim that the
 extension handles no user data merely because it has no developer server.
 
-Use `https://lukeosland1.github.io/HTTPatch-privacy/` in the dashboard's
+Use `https://lukeosland1.github.io/HTTPatch/` in the dashboard's
 privacy-policy field.
 The [Chrome Web Store privacy guidance](https://developer.chrome.com/docs/webstore/cws-dashboard-privacy)
 explains the single-purpose, permission and data-use fields.
@@ -86,7 +86,7 @@ explains the single-purpose, permission and data-use fields.
 3. Confirm the `v1.0.0` tag and draft release. The release workflow rejects a
    tag that differs from `package.json` or has no changelog section.
 4. Review the draft Chromium ZIP and notes, then publish the GitHub release when
-   the repository is ready to be public. A Firefox XPI is attached only when
+   ready. A Firefox XPI is attached only when
    Mozilla signing credentials are configured.
 5. Create the Chrome Web Store listing manually. Upload the Chromium ZIP, add the
    prepared images and descriptions, complete the Privacy practices tab and

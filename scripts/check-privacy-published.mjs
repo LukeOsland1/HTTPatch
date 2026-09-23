@@ -1,7 +1,7 @@
 // Verify that the public privacy page matches the current generated HTML.
 import { readFileSync } from 'node:fs';
 
-const url = process.env.PRIVACY_POLICY_URL ?? 'https://lukeosland1.github.io/HTTPatch-privacy/';
+const url = process.env.PRIVACY_POLICY_URL ?? 'https://lukeosland1.github.io/HTTPatch/';
 if (new URL(url).protocol !== 'https:') throw new Error('PRIVACY_POLICY_URL must use HTTPS.');
 const response = await fetch(url);
 if (!response.ok) throw new Error(`Privacy policy request failed: HTTP ${response.status}`);

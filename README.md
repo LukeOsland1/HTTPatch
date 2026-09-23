@@ -78,7 +78,7 @@ in the options page if you do not want those values copied to your browser accou
 HTTPatch has no content scripts, analytics or developer-operated server. It uses
 the browser's declarative rules API and does not read page content or request bodies.
 The Ko-fi link opens only when clicked; payments are handled on Ko-fi.
-See the [public privacy policy](https://lukeosland1.github.io/HTTPatch-privacy/)
+See the [public privacy policy](https://lukeosland1.github.io/HTTPatch/)
 or [PRIVACY.md](PRIVACY.md) for details.
 
 ## Development
