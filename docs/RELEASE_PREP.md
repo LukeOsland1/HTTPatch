@@ -43,8 +43,9 @@ The [site-scoped popup capture](screenshots/popup-site.png),
 
 **Optional donations:** [Ko-fi](https://ko-fi.com/lukeosland)
 
-**Privacy policy:** [PRIVACY.md](../PRIVACY.md) is the source. Publish the privacy
-page before submitting a public store listing, then use that public HTTPS URL.
+**Privacy policy:** [PRIVACY.md](../PRIVACY.md) is the source. The
+[public HTTPS page](https://lukeosland1.github.io/HTTPatch-privacy/) is ready for
+the store listing; `npm run check:privacy` verifies that it matches the source.
 The extension package also contains an offline `privacy.html` page.
 
 ## Permission explanations
@@ -71,7 +72,8 @@ Describe these behaviours in the Privacy practices tab, including any applicable
 authentication, website and user-provided data categories. Do not claim that the
 extension handles no user data merely because it has no developer server.
 
-Use the published HTTPS privacy-page URL in the dashboard's privacy-policy field.
+Use `https://lukeosland1.github.io/HTTPatch-privacy/` in the dashboard's
+privacy-policy field.
 The [Chrome Web Store privacy guidance](https://developer.chrome.com/docs/webstore/cws-dashboard-privacy)
 explains the single-purpose, permission and data-use fields.
 
@@ -80,10 +82,9 @@ explains the single-purpose, permission and data-use fields.
 1. Use the prepared `1.0.0` version and notes in `CHANGELOG.md`. Check
    [GitHub CI](https://github.com/LukeOsland1/HTTPatch/actions) and run the
    packaged browser test locally. Review the screenshots and listing copy.
-2. Publish the public HTTPS privacy page and run `npm run check:privacy` with
-   `PRIVACY_POLICY_URL` set to its address.
-3. Push `v1.0.0` intentionally. The release workflow rejects a tag that
-   differs from `package.json` or has no changelog section, and creates a draft.
+2. Run `npm run check:privacy` to verify the public HTTPS policy is current.
+3. Confirm the `v1.0.0` tag and draft release. The release workflow rejects a
+   tag that differs from `package.json` or has no changelog section.
 4. Review the draft Chromium ZIP and notes, then publish the GitHub release when
    the repository is ready to be public. A Firefox XPI is attached only when
    Mozilla signing credentials are configured.

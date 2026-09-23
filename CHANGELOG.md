@@ -9,4 +9,4 @@
 - Search common header names and use focused Cookie, Set-Cookie and Content-Security-Policy editors.
 - Import and export JSON profiles, and sync profiles through the browser account with first-sync merge controls. Sync is on by default and includes header values.
 - Choose Light, Dark or System appearance; Light is the default for new installs.
-- Include Chromium and Firefox packages, an offline privacy policy, an MIT licence and optional Ko-fi support.
+- Provide a Chromium release ZIP and Firefox build support, with an offline privacy policy, MIT licence and optional Ko-fi support.

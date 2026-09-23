@@ -1,11 +1,10 @@
-// Render PRIVACY.md into a one-page site for GitHub Pages.
+// Render PRIVACY.md into the standalone public privacy page.
 //
 // The point of this script is what it does NOT do: it never copies the
 // repository. It reads exactly one file, writes exactly one file, and then
 // asserts that is all the output directory contains. That assertion is what
-// makes it safe to serve a Pages site from a PRIVATE repo — a
-// misconfiguration cannot publish source, docs, or history, because the deploy
-// artifact is built from a whitelist of one.
+// ensures that publishing this output cannot expose source, docs or history:
+// the deployable artifact contains only the policy page.
 import { mkdirSync, readFileSync, writeFileSync, readdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { marked } from 'marked';
@@ -42,7 +41,7 @@ writeFileSync(
 </head>
 <body>
 ${body}
-<footer>Published from <code>${SOURCE}</code> by GitHub Actions. Only this page is deployed.</footer>
+<footer>Based on HTTPatch's <code>${SOURCE}</code>.</footer>
 </body>
 </html>
 `,
