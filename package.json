@@ -26,7 +26,7 @@
     "gen:icons": "node scripts/gen-icons.mjs"
   },
   "devDependencies": {
-    "@crxjs/vite-plugin": "^2.7.1",
+    "@crxjs/vite-plugin": "^3.0.0",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.63.0",
     "@preact/preset-vite": "^2.10.6",
